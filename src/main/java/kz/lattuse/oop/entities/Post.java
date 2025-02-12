@@ -1,15 +1,15 @@
 package kz.lattuse.oop.entities;
 
 
-public class Post extends Entity {
-    private static int postGenId = 0;
+public class Post{
+    private int id;
     private String title;
-    private final int authorId;
+    private int authorid;
     private String content;
 
-    public Post(int authorId, String title, String content) {
-        super(postGenId++);
-        this.authorId = authorId;
+    public Post(int id,int authorid, String title, String content) {
+        this.id = id;
+        this.authorid = authorid;
         this.title = title;
         this.content = content;
     }
@@ -22,8 +22,19 @@ public class Post extends Entity {
         this.title = title;
     }
 
+    public void setAuthorId(int authorid) {
+        this.authorid = authorid;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    public int getId() {
+        return id;
+    }
+
     public int getAuthorId() {
-        return authorId;
+        return authorid;
     }
 
     public String getContent() {
@@ -36,7 +47,7 @@ public class Post extends Entity {
 
     @Override
     public String toString() {
-        return "Post {postID=" + id + ", title='" + title + "', authorId=" + authorId + ", content='" + content + "'}";
+        return "Post {postID=" + id + ", title='" + title + "', authorid=" + authorid + ", content='" + content + "'}";
     }
 }
 

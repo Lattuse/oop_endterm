@@ -3,6 +3,8 @@ package kz.lattuse.oop.dbconnection;
 
 import kz.lattuse.oop.entities.User;
 
+import kz.lattuse.oop.entities.Post;
+
 import java.sql.*;
 
 import java.util.ArrayList;
@@ -161,7 +163,7 @@ public class DbConnection {
         closeConnection(con);
 
         if (success > 0) {
-            System.out.println("Student is added");
+            System.out.println("User is added");
             return u;
         }
 
@@ -181,8 +183,181 @@ public class DbConnection {
         closeConnection(con);
 
         if (success > 0) {
-            System.out.println("Student is updated");
+            System.out.println("User is updated");
             return u;
+        }
+
+        return null;
+    }
+
+
+
+    public User deleteUser(Connection con, User u) throws SQLException {
+        String query = "DELETE FROM public.users WHERE id=?"; // query to be run
+        PreparedStatement st = con.prepareStatement(query);
+        st.setInt(1, u.getId());
+
+        //ResultSet rs = st.executeQuery(); // Execute query
+        int success = st.executeUpdate();
+        st.close();
+        closeConnection(con);
+
+        if (success > 0) {
+            System.out.println("User is deleted");
+            return u;
+        }
+
+        return null;
+    }
+
+
+
+
+    public ArrayList<Post> getAllPostsRS(Connection con) throws SQLException {
+        String query = "SELECT * FROM public.posts"; // Query to be run
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery(query); // Execute query
+        ArrayList<Post> posts = new ArrayList<>();
+        System.out.println("lol");
+
+        while (rs.next()) {
+            System.out.println("it works");
+            Post post = new Post(0,0,"","");
+            post.setId(rs.getInt("id"));
+            post.setAuthorId(rs.getInt("authorid"));
+            post.setTitle(rs.getString("title"));
+            post.setContent(rs.getString("content"));
+            System.out.println("it works");
+            posts.add(post);
+        }
+
+        stmt.close();
+        closeConnection(con);
+        return posts;
+    }
+
+
+    public ArrayList<Post> findPostsByTitle(Connection con, String title) throws SQLException {
+        String query = "SELECT * FROM public.posts WHERE title=?"; // Query to be run
+        PreparedStatement st = con.prepareStatement(query);
+        st.setString(1, title);
+
+        ResultSet rs = st.executeQuery(); // Execute query
+
+        ArrayList<Post> posts = new ArrayList<>();
+        Post post = new Post(0, 0,"","");
+        while (rs.next()) {
+            post.setId(rs.getInt("id"));
+            post.setAuthorId(rs.getInt("authorid"));
+            post.setTitle(rs.getString("title"));
+            post.setContent(rs.getString("content"));
+            posts.add(post);
+        }
+
+        st.close();
+        closeConnection(con);
+        return posts;
+    }
+
+    public ArrayList<Post> findPostsByAuthorId(Connection con, int authorId) throws SQLException {
+        String query = "SELECT * FROM public.posts WHERE authorId=?"; // Query to be run
+        PreparedStatement st = con.prepareStatement(query);
+        st.setInt(1, authorId);
+
+        ResultSet rs = st.executeQuery(); // Execute query
+
+        ArrayList<Post> posts = new ArrayList<>();
+        Post post = new Post(0, 0,"", "");
+        while (rs.next()) {
+            post.setId(rs.getInt("id"));
+            post.setAuthorId(rs.getInt("authorid"));
+            post.setTitle(rs.getString("title"));
+            post.setContent(rs.getString("content"));
+            posts.add(post);
+        }
+
+        st.close();
+        closeConnection(con);
+        return posts;
+    }
+
+    public Post findPostById(Connection con, int id) throws SQLException {
+        String query = "SELECT * FROM public.posts WHERE id=?"; // Query to be run
+        PreparedStatement st = con.prepareStatement(query);
+        st.setInt(1, id);
+
+        ResultSet rs = st.executeQuery(); // Execute query
+
+        ArrayList<Post> posts = new ArrayList<>();
+        Post post = new Post(0,0, "", "");
+        while (rs.next()) {
+            post.setId(rs.getInt("id"));
+            post.setAuthorId(rs.getInt("authorid"));
+            post.setTitle(rs.getString("title"));
+            post.setContent(rs.getString("content"));
+            posts.add(post);
+        }
+
+        st.close();
+        closeConnection(con);
+        return post;
+    }
+
+    public Post createPost(Connection con, Post p) throws SQLException {
+        String query = "INSERT INTO public.posts (id, authorId, title, content) VALUES (?, ?, ?, ?)"; // query to be run
+        PreparedStatement st = con.prepareStatement(query);
+        st.setInt(1, p.getId());
+        st.setInt(2, p.getAuthorId());
+        st.setString(3, p.getTitle());
+        st.setString(4, p.getContent());
+        int success = st.executeUpdate(); // Execute query
+        st.close();
+        closeConnection(con);
+
+        if (success > 0) {
+            System.out.println("Post is added");
+            return p;
+        }
+
+        return null;
+    }
+
+
+    public Post updatePost(Connection con, Post p, int oldId) throws SQLException {
+        String query = "UPDATE public.posts SET id=?, authorId=?, title=?, content=? WHERE id=?"; // Query to be run
+        PreparedStatement st = con.prepareStatement(query);
+        st.setInt(1, p.getId());
+        st.setInt(2, p.getAuthorId());
+        st.setString(3, p.getTitle());
+        st.setString(4, p.getContent());
+        st.setInt(5, oldId);
+        int success = st.executeUpdate(); // Execute query
+        st.close();
+        closeConnection(con);
+
+        if (success > 0) {
+            System.out.println("Post is updated");
+            return p;
+        }
+
+        return null;
+    }
+
+
+
+    public Post deletePost(Connection con, Post p) throws SQLException {
+        String query = "DELETE FROM public.posts WHERE id=?"; // query to be run
+        PreparedStatement st = con.prepareStatement(query);
+        st.setInt(1, p.getId());
+
+        //ResultSet rs = st.executeQuery(); // Execute query
+        int success = st.executeUpdate();
+        st.close();
+        closeConnection(con);
+
+        if (success > 0) {
+            System.out.println("Post is deleted");
+            return p;
         }
 
         return null;
